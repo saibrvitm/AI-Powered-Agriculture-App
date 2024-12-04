@@ -1,5 +1,6 @@
 import React from "react";
 import "./Hero.css";
+import img from "../images/heroimg.png";
 
 const Hero = () => {
   return (
@@ -13,11 +14,7 @@ const Hero = () => {
         <button className="hero-button">Learn More</button>
       </div>
       <div className="hero-visual">
-        <img
-          src="https://via.placeholder.com/500x300.png?text=Farming+Illustration"
-          alt="Farming Illustration"
-          className="hero-image"
-        />
+        <img src={img} alt="Farming Illustration" className="hero-image" />
       </div>
     </div>
   );

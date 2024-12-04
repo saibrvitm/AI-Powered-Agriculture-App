@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import "./ToolsShowcase.css";
 
 const ToolsShowcase = () => {
@@ -8,24 +9,28 @@ const ToolsShowcase = () => {
       description:
         "Identify the most suitable crops for your region using AI insights.",
       icon: "🌾",
+      link: "/crop-selector", // Corrected the spelling of "selector"
     },
     {
       title: "Farm Calendar",
       description:
         "Plan and optimize your farming schedule with intelligent recommendations.",
       icon: "📅",
+      link: "/farm-calendar", // Added link for Farm Calendar
     },
     {
       title: "Water Advisor",
       description:
         "Conserve water and optimize irrigation for sustainable farming.",
       icon: "💧",
+      link: "/water-advisor", // Added link for Water Advisor
     },
     {
       title: "Climate Risk Analyzer",
       description:
         "Stay ahead of climate challenges with risk analysis and mitigation strategies.",
       icon: "🌍",
+      link: "/climate-risk-analyzer", // Added link for Climate Risk Analyzer
     },
   ];
 
@@ -38,11 +43,13 @@ const ToolsShowcase = () => {
       </p>
       <div className="tools-grid">
         {tools.map((tool, index) => (
-          <div key={index} className="tool-card">
+          <Link to={tool.link} key={index} className="tool-card">
+            {" "}
+            {/* Wrap the card in a Link */}
             <div className="tool-icon">{tool.icon}</div>
             <h3 className="tool-title">{tool.title}</h3>
             <p className="tool-description">{tool.description}</p>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
