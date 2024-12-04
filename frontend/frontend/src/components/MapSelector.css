@@ -1,0 +1,33 @@
+.map-selector {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.map-selector h2 {
+  text-align: center;
+  color: #4a4e69;
+}
+
+.coordinates-display {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f4f4f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.coordinates-display h3 {
+  margin-bottom: 10px;
+  color: #4a4e69;
+}
+
+.coordinates-display p {
+  margin: 5px 0;
+  font-weight: bold;
+}
