@@ -9,6 +9,11 @@
 ### 3. **crop_yield_by_rainfall.csv**  
 - **Source:** [Smart Agricultural Production Optimizing Engine](https://www.kaggle.com/datasets/chitrakumari25/smart-agricultural-production-optimizing-engine)
 
+Mentions:
+
+https://www.kaggle.com/datasets/datasetengineer/smart-farming-data-2024-sf24
+https://www.kaggle.com/datasets/mdmub0587/agricultural-water-footprint/data
+
 ---
 
 # Modifications
