@@ -14,7 +14,7 @@ const CropSelector = () => {
   const [loading, setLoading] = useState(false);
   const [weatherLoading, setWeatherLoading] = useState(false); // Track weather loading state
 
-  // Fetch Monthly Weather Data from OpenWeatherMap API
+  // Function to fetch Monthly Weather Data when location changes
   const fetchMonthlyWeatherData = async (lat, lon) => {
     setWeatherLoading(true); // Start loading weather data
     try {
@@ -31,7 +31,8 @@ const CropSelector = () => {
       const temperatures = data.daily.temperature_2m_max;
       const rainfall = data.daily.precipitation_sum;
 
-      const avgTemp = temperatures.reduce((a, b) => a + b, 0) / temperatures.length;
+      const avgTemp =
+        temperatures.reduce((a, b) => a + b, 0) / temperatures.length;
       const avgRainfall = rainfall.reduce((a, b) => a + b, 0) / rainfall.length;
 
       setWeatherData({
@@ -46,22 +47,26 @@ const CropSelector = () => {
     }
   };
 
+  // Fetch weather data when location changes
+  useEffect(() => {
+    if (coordinates && coordinates.length === 2) {
+      fetchMonthlyWeatherData(coordinates[0], coordinates[1]);
+    }
+  }, [coordinates]); // Fetch weather whenever the coordinates change
+
   // Handle form submission to filter crops based on soil parameters and weather data
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     setLoading(true);
 
-    // Fetch the monthly weather data when the form is submitted
-    await fetchMonthlyWeatherData(coordinates[0], coordinates[1]); // Ensure data is fetched before proceeding
-  
-    // Check if the weather data is valid before making the request
+    // Check if the weather data is loaded, if not, do not proceed
     if (!weatherData?.averageTemperature || !weatherData?.averageRainfall) {
-      console.error("Weather data is invalid");
+      console.error("Weather data is invalid or not loaded.");
       setLoading(false);
       return;
     }
-  
+
+    // Prepare the data for crop recommendation
     const WData = {
       temperature: weatherData.averageTemperature,
       humidity: 34, // Assuming you have a humidity value (You can modify this to use a better value)
@@ -71,31 +76,29 @@ const CropSelector = () => {
       ph: ph,
       rainfall: weatherData.averageRainfall,
     };
-  
+
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/crop/", WData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-  
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/crop/",
+        WData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       // Set the filtered crops as recommendations
-      setRecommendations(response.data.predicted_crop ? [response.data.predicted_crop] : []);
+      setRecommendations(
+        response.data.predicted_crop ? [response.data.predicted_crop] : []
+      );
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       setRecommendations([]); // Clear recommendations on error
     }
-  
+
     setLoading(false);
   };
-
-  useEffect(() => {
-    // This effect will run once the weather data has changed or is fully loaded
-    if (weatherData.averageTemperature && weatherData.averageRainfall) {
-      // Only trigger the crop recommendation after the weather data is available
-      console.log("Weather data loaded:", weatherData);
-    }
-  }, [weatherData]);
 
   return (
     <div className="crop-selector">
@@ -115,10 +118,13 @@ const CropSelector = () => {
         ) : (
           <p>
             {weatherData.averageTemperature
-              ? "Average Temperature: " + weatherData.averageTemperature.toFixed(2) + " °C"
+              ? "Average Temperature: " +
+                weatherData.averageTemperature.toFixed(2) +
+                " °C"
               : " "}
           </p>
         )}
+
         <div className="form-group">
           <label htmlFor="nitrogen">Nitrogen (N):</label>
           <input
@@ -159,7 +165,8 @@ const CropSelector = () => {
             placeholder="Enter pH value"
           />
         </div>
-        <button type="submit" className="submit-button" disabled={loading || weatherLoading}>
+
+        <button type="submit" className="submit-button" disabled={loading}>
           {loading ? "Finding Crops..." : "Find Crops"}
         </button>
       </form>
