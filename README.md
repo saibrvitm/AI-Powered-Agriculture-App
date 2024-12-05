@@ -29,15 +29,15 @@ To set up the project on your local machine, follow these steps:
    cd AI-Powered-Agriculture-App
    ```
 
-2. **ML Models Setup:**
-   - Go to the `backend` folder, and choose any folder inside it. Here reside the ML Models and their datasets
-   - Run the `make_model.py` script for any of the models to create it.
+2. **Backend Setup:**
+   - Go to the `dev` folder inside the `crop-selector` directory.
+   - Run the `suggest_crop.py` script.
+   - Ensure that the output .pkl file is stored in the `crop-selector` directory
 
 3. **Install FastAPI and run the backend server:**
-   - Inside the `backend` folder, install the necessary dependencies:
+   - Inside the `dev` folder, install the necessary dependencies:
      ```bash
-     pip install -r requirements.txt
-     pip install "fastapi[standard]"
+     pip install fastapi
      ```
    - Start the FastAPI server by running the following:
      ```bash
@@ -68,6 +68,7 @@ Once the backend and frontend servers are running:
 
 1. Open your browser and visit `http://localhost:3000` to access the user interface.
 2. Input your crop-related data (such as soil information, weather conditions, etc.) to receive personalized crop recommendations.
+3. You can also analyze plant health, get fertilizer suggestions, and access weather insights tailored to agricultural needs.
 
 ---
 
@@ -75,12 +76,12 @@ Once the backend and frontend servers are running:
 
 - **Backend:** Python, FastAPI, Machine Learning
 - **Frontend:** React, JavaScript, CSS
-- **AI/ML:** Scikit-learn
+- **AI/ML:** TensorFlow, OpenCV, Scikit-learn
 - **Other Libraries:** Axios (for API requests)
 
 ## Sources
 
-Dataset sources can be found under `docs.md` file under each folder of `backend`.
+Dataset sources can be found under `backend/crop-selector/dev/docs.md`
 
 ---
 
