@@ -5,6 +5,8 @@ import CropSelector from "./components/CropSelector";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import LandingPage from "./pages/LandingPage";
+import CropSelectorPage from "./pages/CropSelectorPage";
+import WaterAdvisor from "./components/WaterAdvisor";
 
 function App() {
   return (
@@ -12,9 +14,11 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/crop-selector" element={<CropSelector />} />{" "}
+          <Route path="/crop-selector" element={<CropSelectorPage />} />{" "}
           {/* Updated to use element prop */}
           <Route path="/" element={<LandingPage />} />{" "}
+          {/* Updated to use element prop */}
+          <Route path="/water-advisor" element={<WaterAdvisor />} />{" "}
           {/* Updated to use element prop */}
         </Routes>
         <Footer />
