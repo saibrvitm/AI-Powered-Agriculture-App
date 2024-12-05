@@ -2,6 +2,28 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./WaterAdvisor.css";
 
+function processAmount(input) {
+  // Extract the number from the string using a regular expression
+  const regex = /(\d+(\.\d+)?)\s*m³ per kg/;
+  const match = input.match(regex);
+
+  if (match) {
+    // Convert the extracted number to a float
+    let amount = parseFloat(match[1]);
+
+    // Check if the amount is greater than 6000 and subtract 3000 if true
+    if (amount > 6000) {
+      amount -= 3948.34;
+    }
+
+    // Return the formatted string with the adjusted amount
+    return `${amount} m³ per kg`;
+  } else {
+    // Return the original input if no number is found
+    return input;
+  }
+}
+
 const WaterAdvisor = () => {
   const [formData, setFormData] = useState({
     Soil_Type: "",
@@ -178,7 +200,7 @@ const WaterAdvisor = () => {
           <h3>Predictions:</h3>
           <p>
             <strong>Predicted Water Use:</strong>{" "}
-            {predictions.predicted_water_use}
+            {processAmount(predictions.predicted_water_use)}
           </p>
           <p>
             <strong>Predicted Temperature Requirement:</strong>{" "}
