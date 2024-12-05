@@ -16,7 +16,10 @@ const Hero = () => {
         </button>
       </div>
       <div className="hero-visual">
-        <img src={img} alt="Farming Illustration" className="hero-image" />
+        {/* <img src={img} alt="Farming Illustration" className="hero-image" /> */}
+        <video width="680" height="320" autoPlay muted loop>
+          <source src="https://static.vecteezy.com/system/resources/previews/036/492/347/mp4/drone-spraying-fertilizer-on-vegetable-green-plants-agriculture-technology-farm-automation-video.mp4" type="video/mp4"/>
+        </video>
       </div>
     </div>
   );
