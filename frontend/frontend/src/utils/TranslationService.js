@@ -12,6 +12,7 @@ const TranslationService = () => {
       detect_browser_language: true,
       languages: [
         "en",
+        "kn",
         "fr",
         "de",
         "it",
