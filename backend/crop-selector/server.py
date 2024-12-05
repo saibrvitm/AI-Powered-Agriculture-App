@@ -25,7 +25,6 @@ class CropInput(BaseModel):
     P: float
     K: float
     temperature: float
-    humidity: float
     ph: float
     rainfall: float
 
@@ -34,13 +33,19 @@ class CropInput(BaseModel):
 def crop_predict(input_data: CropInput):
     # Convert input to numpy array for prediction
     features = np.array([[input_data.N, input_data.P, input_data.K, 
-                          input_data.temperature, input_data.humidity, 
+                          input_data.temperature, 
                           input_data.ph, input_data.rainfall]])
     
-    # Predict crop
-    prediction = model.predict(features)
-    crop_name = prediction[0]  # Assuming model outputs the crop name directly
+    # Predict probabilities for each crop
+    probabilities = model.predict_proba(features)
+    
+    # Get the top 3 predicted crops
+    top_n = 3
+    top_crops_indices = np.argsort(probabilities[0])[::-1][:top_n]
+    
+    # Fetch top crops and probabilities
+    top_crops = [(model.classes_[i], probabilities[0][i]) for i in top_crops_indices]
+    crop_name = "  |  ".join([f"{crop[0]} ({crop[1]*100:.2f}% GS)" for crop in top_crops])
 
     # Return the result as JSON
     return {"input_data": input_data.dict(), "predicted_crop": crop_name}
-

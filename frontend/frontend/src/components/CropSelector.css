@@ -1,8 +1,8 @@
 /* General Container Styling */
 .crop-selector {
-  max-width: 550px;
+  max-width: 900px;
   margin: 2rem auto;
-  padding: 1.5rem 1.8rem;
+  padding: 1.5rem;
   background: #fefefe;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -10,65 +10,56 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-/* Decorative Background Elements */
-.crop-selector::before {
-  content: "";
-  position: absolute;
-  top: -50px;
-  left: -50px;
-  width: 150px;
-  height: 150px;
-  background: rgba(59, 130, 246, 0.1);
-  border-radius: 50%;
-  z-index: -1;
+/* Layout for Form and Map */
+.input-map-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
 }
 
-.crop-selector::after {
-  content: "";
-  position: absolute;
-  bottom: -60px;
-  right: -60px;
-  width: 200px;
-  height: 200px;
-  background: rgba(234, 88, 12, 0.1);
-  border-radius: 50%;
-  z-index: -1;
+.input-map-layout .crop-form {
+  flex: 1 1 45%;
+  text-align: left;
 }
 
-/* Heading */
-.crop-selector h2 {
-  font-size: 2.2rem;
+.input-map-layout .map-selector {
+  flex: 1 1 45%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #f9fafb;
+  color: #64748b;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.input-map-layout .map-selector h3 {
+  font-size: 1.2rem;
   color: #1e3a8a;
-  margin-bottom: 1.2rem;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
 }
 
-/* Form Styling */
+/* Form Fields */
 .crop-form {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  text-align: left;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-label {
+.form-group label {
   font-size: 0.9rem;
   color: #475569;
   font-weight: 600;
 }
 
-input,
-select {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 10px 12px;
   font-size: 1rem;
@@ -79,19 +70,20 @@ select {
   transition: all 0.2s ease-in-out;
 }
 
-input::placeholder,
-select::placeholder {
-  color: #9ca3af;
-}
-
-input:focus,
-select:focus {
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 6px rgba(59, 130, 246, 0.2);
 }
 
-/* Button Styling */
+/* Button Layout */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
 .submit-button {
   background-color: #1e3a8a;
   color: #ffffff;
@@ -116,93 +108,103 @@ select:focus {
   cursor: not-allowed;
 }
 
-/* Weather Data Section */
-.weather-data {
-  text-align: center;
-  margin: 1.5rem 0;
+.reset-button {
+  background-color: #ef4444;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+  background-color: #f87171;
+  transform: scale(1.05);
+}
+
+.reset-button:disabled {
+  background-color: #fecaca;
+  cursor: not-allowed;
+}
+
+/* Visual Indicator for Graphs */
+.graph-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
   padding: 1rem;
   background: #f1f5f9;
-  border-radius: 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #475569;
+  border: 1px dashed #d1d5db;
+}
+
+.graph-indicator::before {
+  content: "⬇";
+  font-size: 1.2rem;
+  color: #1e3a8a;
+}
+
+.graph-indicator p {
+  margin: 0;
+}
+
+.graph-indicator p strong {
+  color: #2563eb;
+}
+
+/* Weather Graphs Section */
+.weather-trends {
+  margin-top: 2rem;
+  padding: 1rem 0.5rem;
+  background: #f9fafb;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.weather-data p {
-  font-size: 1rem;
-  color: #475569;
-  margin: 0.5rem 0;
-}
-
-/* Recommendations Section */
-.recommendations {
-  margin-top: 2rem;
-  padding: 1rem 0.5rem;
-  background: linear-gradient(to right, #e0f2fe, #f1f5f9);
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.recommendations h3 {
+.weather-trends h3 {
   font-size: 1.4rem;
   color: #1e3a8a;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
-.recommendations ul {
-  list-style: none;
-  padding: 0;
-}
-
-.recommendations li {
-  font-size: 1rem;
-  color: #1e293b;
-  background: #ffffff;
-  padding: 0.8rem;
-  margin: 0.6rem 0;
+.weather-trends canvas {
+  margin-top: 1rem;
+  max-width: 100%;
+  height: auto;
   border-radius: 6px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.recommendations li:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Map Selector Section */
-.map-selector {
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 1rem;
-  background-color: #f9fafb;
-  color: #64748b;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-/* Placeholder Styling */
-input[type="number"]::placeholder {
-  font-style: italic;
-  color: #9ca3af;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 0.5rem;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .crop-selector {
-    padding: 1.2rem 1.5rem;
+  .input-map-layout {
+    flex-direction: column;
   }
 
-  .crop-selector h2 {
-    font-size: 1.8rem;
+  .crop-form,
+  .map-selector {
+    flex: 1 1 100%;
   }
 
-  .submit-button {
-    font-size: 0.9rem;
-    padding: 8px 12px;
+  .button-group {
+    flex-direction: column;
   }
+}
 
-  .recommendations li {
-    font-size: 0.9rem;
-    padding: 0.6rem;
-  }
+.ph-indicator {
+  font-size: 12px;
+  color: #007BFF;
+  margin-left: 10px;
+  font-weight: bold;
 }

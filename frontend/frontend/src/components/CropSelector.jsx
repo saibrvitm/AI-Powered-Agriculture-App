@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./CropSelector.css";
 import MapSelector from "./MapSelector";
+import { Line, Bar } from "react-chartjs-2"; // Charts for trends
+import "chart.js/auto"; // Automatically register required components
 
 const CropSelector = () => {
   const [coordinates, setCoordinates] = useState([28.6139, 77.209]); // Default location: Delhi
@@ -11,12 +13,13 @@ const CropSelector = () => {
   const [ph, setPh] = useState("");
   const [recommendations, setRecommendations] = useState([]);
   const [weatherData, setWeatherData] = useState({});
+  const [dailyWeather, setDailyWeather] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [weatherLoading, setWeatherLoading] = useState(false); // Track weather loading state
+  const [weatherLoading, setWeatherLoading] = useState(false);
 
   // Function to fetch Monthly Weather Data when location changes
   const fetchMonthlyWeatherData = async (lat, lon) => {
-    setWeatherLoading(true); // Start loading weather data
+    setWeatherLoading(true);
     try {
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - 30); // 30 days ago
@@ -27,23 +30,32 @@ const CropSelector = () => {
       const response = await axios.get(url);
       const data = response.data;
 
-      // Calculate average temperature and rainfall
-      const temperatures = data.daily.temperature_2m_max;
-      const rainfall = data.daily.precipitation_sum;
+      const { temperature_2m_max, temperature_2m_min, precipitation_sum, time } =
+        data.daily;
 
+      // Calculate average temperature and rainfall
       const avgTemp =
-        temperatures.reduce((a, b) => a + b, 0) / temperatures.length;
-      const avgRainfall = rainfall.reduce((a, b) => a + b, 0) / rainfall.length;
+        temperature_2m_max.reduce((a, b) => a + b, 0) / temperature_2m_max.length;
+      const avgRainfall =
+        precipitation_sum.reduce((a, b) => a + b, 0) / precipitation_sum.length;
 
       setWeatherData({
         averageTemperature: avgTemp,
         averageRainfall: avgRainfall,
       });
+
+      setDailyWeather({
+        dates: time,
+        maxTemperatures: temperature_2m_max,
+        minTemperatures: temperature_2m_min,
+        rainfall: precipitation_sum,
+      });
     } catch (error) {
       console.error("Error fetching monthly weather data:", error);
-      setWeatherData({ averageTemperature: 0, averageRainfall: 0 }); // Default values in case of error
+      setWeatherData({ averageTemperature: 0, averageRainfall: 0 });
+      setDailyWeather([]);
     } finally {
-      setWeatherLoading(false); // End loading weather data
+      setWeatherLoading(false);
     }
   };
 
@@ -52,24 +64,28 @@ const CropSelector = () => {
     if (coordinates && coordinates.length === 2) {
       fetchMonthlyWeatherData(coordinates[0], coordinates[1]);
     }
-  }, [coordinates]); // Fetch weather whenever the coordinates change
+  }, [coordinates]);
 
-  // Handle form submission to filter crops based on soil parameters and weather data
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!weatherData?.averageTemperature || !weatherData?.averageRainfall) {
+      alert("Please choose a valid location on the map to fetch weather data.");
+      return;
+    }
+    if (!nitrogen || !phosphorus || !potassium || !ph) {
+      alert("Please fill in all the fields.");
+      return;
+    }
     setLoading(true);
 
-    // Check if the weather data is loaded, if not, do not proceed
     if (!weatherData?.averageTemperature || !weatherData?.averageRainfall) {
       console.error("Weather data is invalid or not loaded.");
       setLoading(false);
       return;
     }
 
-    // Prepare the data for crop recommendation
     const WData = {
       temperature: weatherData.averageTemperature,
-      humidity: 34, // Assuming you have a humidity value (You can modify this to use a better value)
       N: nitrogen,
       P: phosphorus,
       K: potassium,
@@ -88,16 +104,44 @@ const CropSelector = () => {
         }
       );
 
-      // Set the filtered crops as recommendations
       setRecommendations(
-        response.data.predicted_crop ? [response.data.predicted_crop] : []
+        response.data.predicted_crop
+          ? [
+              {
+                crop: response.data.predicted_crop,
+                nitrogen: nitrogen,
+                phosphorus: phosphorus,
+                potassium: potassium,
+              },
+            ]
+          : []
       );
     } catch (error) {
       console.error("Error fetching recommendations:", error);
-      setRecommendations([]); // Clear recommendations on error
+      setRecommendations([]);
     }
 
     setLoading(false);
+  };
+
+  const resetForm = () => {
+    setNitrogen("");
+    setPhosphorus("");
+    setPotassium("");
+    setPh("");
+    setRecommendations([]);
+    setWeatherData({});
+    setDailyWeather([]);
+  };
+
+  // Function to classify the pH value
+  const classifyPh = (phValue) => {
+    if (phValue < 4.5) return "Very Acidic";
+    if (phValue >= 4.5 && phValue < 5.5) return "Acidic";
+    if (phValue >= 5.5 && phValue < 6.5) return "Neutral";
+    if (phValue >= 6.5 && phValue < 7.5) return "Slightly Alkaline";
+    if (phValue >= 7.5) return "Alkaline";
+    return "";
   };
 
   return (
@@ -114,14 +158,13 @@ const CropSelector = () => {
         </div>
 
         {weatherLoading ? (
-          <p>Loading weather data...</p> // Display a loading message until weather data is fetched
+          <p>Loading weather data...</p>
         ) : (
           <p>
-            {weatherData.averageTemperature
-              ? "Average Temperature: " +
-                weatherData.averageTemperature.toFixed(2) +
-                " °C"
-              : " "}
+            Average Temperature:{" "}
+            {weatherData.averageTemperature?.toFixed(2)} °C
+            <br />
+            Average Rainfall: {weatherData.averageRainfall?.toFixed(2)} mm
           </p>
         )}
 
@@ -157,28 +200,47 @@ const CropSelector = () => {
         </div>
         <div className="form-group">
           <label htmlFor="ph">pH of Soil:</label>
-          <input
-            type="number"
-            id="ph"
-            value={ph}
-            onChange={(e) => setPh(e.target.value)}
-            placeholder="Enter pH value"
-          />
+          <div className="slider-container" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+            <input
+              type="number"
+              id="ph"
+              value={ph}
+              onChange={(e) => setPh(e.target.value)}
+              placeholder="Enter pH value"
+            />
+            {ph && (
+              <span className="ph-indicator">
+                ({classifyPh(Number(ph))})
+              </span>
+            )}
+          </div>
         </div>
 
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? "Finding Crops..." : "Find Crops"}
         </button>
+        <button
+          type="button"
+          className="reset-button"
+          onClick={resetForm}
+          disabled={loading}
+        >
+          Reset
+        </button>
       </form>
 
       <div className="recommendations">
-        <h3>Recommended Crops:</h3>
+        <strong>Recommended Crops:</strong>
         {recommendations.length > 0 ? (
-          <ul>
-            {recommendations.map((crop, index) => (
+          <ul className="crop-list">
+            {recommendations.map((rec, index) => (
               <li key={index}>
-                <strong>{crop}</strong> - Best suited for the given soil
-                parameters.
+                <h3>{rec.crop}</h3>
+                <p>GS = Growth Success</p>
+                <strong>Nutrient Values:</strong>
+                <p>- Nitrogen: {rec.nitrogen}</p>
+                <p>- Phosphorus: {rec.phosphorus}</p>
+                <p>- Potassium: {rec.potassium}</p>
               </li>
             ))}
           </ul>
@@ -186,6 +248,43 @@ const CropSelector = () => {
           <p>No recommendations available. Try adjusting your inputs.</p>
         )}
       </div>
+
+      {dailyWeather.dates && (
+        <div className="weather-trends">
+          <h3>Weather Trends</h3>
+          <Line
+            data={{
+              labels: dailyWeather.dates,
+              datasets: [
+                {
+                  label: "Max Temperature (°C)",
+                  data: dailyWeather.maxTemperatures,
+                  borderColor: "red",
+                  fill: false,
+                },
+                {
+                  label: "Min Temperature (°C)",
+                  data: dailyWeather.minTemperatures,
+                  borderColor: "blue",
+                  fill: false,
+                },
+              ],
+            }}
+          />
+          <Bar
+            data={{
+              labels: dailyWeather.dates,
+              datasets: [
+                {
+                  label: "Rainfall (mm)",
+                  data: dailyWeather.rainfall,
+                  backgroundColor: "rgba(75,192,192,0.4)",
+                },
+              ],
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

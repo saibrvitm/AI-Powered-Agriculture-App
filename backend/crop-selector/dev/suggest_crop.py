@@ -6,9 +6,10 @@ import joblib  # For saving and loading the model
 
 # Step 1: Load and prepare the data
 data = pd.read_csv("./datasets/crop_yield_by_rainfall.csv")
+data['rainfall'] = data['rainfall'] / 100
 
 # Features and target
-X = data[['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']]
+X = data[['N', 'P', 'K', 'temperature', 'ph', 'rainfall']]
 y = data['crop']
 
 # Step 2: Split the data
