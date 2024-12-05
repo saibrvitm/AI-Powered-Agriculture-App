@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./WaterAdvisor.css";
 
 const WaterAdvisor = () => {
   const [formData, setFormData] = useState({
@@ -28,11 +29,15 @@ const WaterAdvisor = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/water_use", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/water_use",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       setPredictions(response.data); // Save predictions to state
     } catch (error) {
       console.error("Error predicting water use:", error);
@@ -90,7 +95,9 @@ const WaterAdvisor = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="Rainfall_Requirement">Rainfall Requirement (mm/year):</label>
+          <label htmlFor="Rainfall_Requirement">
+            Rainfall Requirement (mm/year):
+          </label>
           <input
             type="number"
             name="Rainfall_Requirement"
@@ -100,7 +107,9 @@ const WaterAdvisor = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="Temperature_Requirement">Temperature Requirement (°C):</label>
+          <label htmlFor="Temperature_Requirement">
+            Temperature Requirement (°C):
+          </label>
           <input
             type="number"
             name="Temperature_Requirement"
@@ -111,16 +120,13 @@ const WaterAdvisor = () => {
 
         <div className="form-group">
           <label htmlFor="Yield">Yield (kg):</label>
-          <input
-            type="number"
-            name="Yield"
-            onChange={handleChange}
-            required
-          />
+          <input type="number" name="Yield" onChange={handleChange} required />
         </div>
 
         <div className="form-group">
-          <label htmlFor="Crop_Cycle_Duration">Crop Cycle Duration (days):</label>
+          <label htmlFor="Crop_Cycle_Duration">
+            Crop Cycle Duration (days):
+          </label>
           <input
             type="number"
             name="Crop_Cycle_Duration"
@@ -139,13 +145,16 @@ const WaterAdvisor = () => {
         <div className="predictions">
           <h3>Predictions:</h3>
           <p>
-            <strong>Predicted Water Use:</strong> {predictions.predicted_water_use}
+            <strong>Predicted Water Use:</strong>{" "}
+            {predictions.predicted_water_use}
           </p>
           <p>
-            <strong>Predicted Temperature Requirement:</strong> {predictions.predicted_temperature_requirement}
+            <strong>Predicted Temperature Requirement:</strong>{" "}
+            {predictions.predicted_temperature_requirement}
           </p>
           <p>
-            <strong>Predicted Rainfall Requirement:</strong> {predictions.predicted_rainfall_requirement}
+            <strong>Predicted Rainfall Requirement:</strong>{" "}
+            {predictions.predicted_rainfall_requirement}
           </p>
         </div>
       )}
