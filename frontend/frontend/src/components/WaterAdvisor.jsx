@@ -16,7 +16,6 @@ const WaterAdvisor = () => {
 
   const [predictions, setPredictions] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -28,7 +27,6 @@ const WaterAdvisor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null); // Reset error state
 
     try {
       const response = await axios.post(
@@ -41,9 +39,9 @@ const WaterAdvisor = () => {
         }
       );
       setPredictions(response.data); // Save predictions to state
-    } catch (err) {
-      console.error("Error predicting water use:", err);
-      setError("Failed to fetch predictions. Please try again.");
+    } catch (error) {
+      console.error("Error predicting water use:", error);
+      alert("Failed to fetch predictions. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -53,18 +51,22 @@ const WaterAdvisor = () => {
   const addCropToCalendar = () => {
     const currentDate = new Date();
     const endDate = new Date(currentDate);
-    endDate.setDate(
-      currentDate.getDate() + parseInt(formData.Crop_Cycle_Duration, 10)
-    );
+    endDate.setDate(endDate.getDate() + parseInt(formData.Crop_Cycle_Duration));
 
+    // Create the event
     const newEvent = {
       title: `${formData.Crop_Name} Cycle`,
-      start: currentDate.toISOString(),
-      end: endDate.toISOString(),
+      start: currentDate,
+      end: endDate,
     };
 
+    // Get existing events from localStorage or initialize with an empty array
     const storedEvents = JSON.parse(localStorage.getItem("events")) || [];
+
+    // Add the new event to the stored events
     storedEvents.push(newEvent);
+
+    // Save updated events back to localStorage
     localStorage.setItem("events", JSON.stringify(storedEvents));
 
     alert("Crop cycle added to the calendar!");
@@ -78,12 +80,7 @@ const WaterAdvisor = () => {
         {/* Input Fields */}
         <div className="form-group">
           <label htmlFor="Soil_Type">Soil Type:</label>
-          <select
-            name="Soil_Type"
-            value={formData.Soil_Type}
-            onChange={handleChange}
-            required
-          >
+          <select name="Soil_Type" onChange={handleChange} required>
             <option value="">Select Soil Type</option>
             <option value="Sandy">Sandy</option>
             <option value="Clay">Clay</option>
@@ -93,12 +90,7 @@ const WaterAdvisor = () => {
 
         <div className="form-group">
           <label htmlFor="Irrigation_Type">Irrigation Type:</label>
-          <select
-            name="Irrigation_Type"
-            value={formData.Irrigation_Type}
-            onChange={handleChange}
-            required
-          >
+          <select name="Irrigation_Type" onChange={handleChange} required>
             <option value="">Select Irrigation Type</option>
             <option value="Drip">Drip</option>
             <option value="Sprinkler">Sprinkler</option>
@@ -108,12 +100,7 @@ const WaterAdvisor = () => {
 
         <div className="form-group">
           <label htmlFor="Water_Scarcity">Water Scarcity Level:</label>
-          <select
-            name="Water_Scarcity"
-            value={formData.Water_Scarcity}
-            onChange={handleChange}
-            required
-          >
+          <select name="Water_Scarcity" onChange={handleChange} required>
             <option value="">Select Water Scarcity</option>
             <option value="Low">Low</option>
             <option value="Moderate">Moderate</option>
@@ -126,7 +113,6 @@ const WaterAdvisor = () => {
           <input
             type="text"
             name="Crop_Name"
-            value={formData.Crop_Name}
             onChange={handleChange}
             placeholder="Enter Crop Name"
             required
@@ -140,7 +126,6 @@ const WaterAdvisor = () => {
           <input
             type="number"
             name="Rainfall_Requirement"
-            value={formData.Rainfall_Requirement}
             onChange={handleChange}
             required
           />
@@ -153,7 +138,6 @@ const WaterAdvisor = () => {
           <input
             type="number"
             name="Temperature_Requirement"
-            value={formData.Temperature_Requirement}
             onChange={handleChange}
             required
           />
@@ -161,13 +145,7 @@ const WaterAdvisor = () => {
 
         <div className="form-group">
           <label htmlFor="Yield">Yield (kg):</label>
-          <input
-            type="number"
-            name="Yield"
-            value={formData.Yield}
-            onChange={handleChange}
-            required
-          />
+          <input type="number" name="Yield" onChange={handleChange} required />
         </div>
 
         <div className="form-group">
@@ -177,7 +155,6 @@ const WaterAdvisor = () => {
           <input
             type="number"
             name="Crop_Cycle_Duration"
-            value={formData.Crop_Cycle_Duration}
             onChange={handleChange}
             required
           />
@@ -188,15 +165,10 @@ const WaterAdvisor = () => {
         </button>
       </form>
 
-      {/* Error Message */}
-      {error && <p className="error-message">{error}</p>}
-
       {/* Button to Add Crop Cycle to Calendar */}
       {predictions && (
         <div className="add-to-calendar">
-          <button onClick={addCropToCalendar}>
-            Add Crop Cycle to Calendar
-          </button>
+          <button onClick={addCropToCalendar}>Add Crop Cycle to Calendar</button>
         </div>
       )}
 
