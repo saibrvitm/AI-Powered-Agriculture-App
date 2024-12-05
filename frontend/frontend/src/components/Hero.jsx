@@ -11,7 +11,9 @@ const Hero = () => {
           Empowering farmers with intelligent tools to optimize crop yields,
           conserve resources, and adapt to climate change.
         </p>
-        <button className="hero-button">Learn More</button>
+        <button className="hero-button">
+          <a href="https://www.sciencedirect.com/science/article/pii/S258972172030012X" target="_blank" rel="noopener noreferrer">Learn More</a>
+        </button>
       </div>
       <div className="hero-visual">
         <img src={img} alt="Farming Illustration" className="hero-image" />

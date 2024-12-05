@@ -12,13 +12,6 @@ const ToolsShowcase = () => {
       link: "/crop-selector", // Corrected the spelling of "selector"
     },
     {
-      title: "Farm Calendar",
-      description:
-        "Plan and optimize your farming schedule with intelligent recommendations.",
-      icon: "📅",
-      link: "/farm-calendar", // Added link for Farm Calendar
-    },
-    {
       title: "Water Advisor",
       description:
         "Conserve water and optimize irrigation for sustainable farming.",
@@ -26,11 +19,11 @@ const ToolsShowcase = () => {
       link: "/water-advisor", // Added link for Water Advisor
     },
     {
-      title: "Climate Risk Analyzer",
+      title: "Farm Calendar",
       description:
-        "Stay ahead of climate challenges with risk analysis and mitigation strategies.",
-      icon: "🌍",
-      link: "/climate-risk-analyzer", // Added link for Climate Risk Analyzer
+        "Plan and optimize your farming schedule with intelligent recommendations.",
+      icon: "📅",
+      link: "/farm-calendar", // Added link for Farm Calendar
     },
   ];
 
