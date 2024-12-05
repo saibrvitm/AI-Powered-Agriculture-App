@@ -10,6 +10,7 @@ import WaterAdvisor from "./components/WaterAdvisor";
 import AboutUs from "./components/AboutUs";
 import AboutUsPage from "./pages/AboutUsPage";
 import FarmerCalendar from "./components/FarmerCalendar";
+import TranslationService from "./utils/TranslationService";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/farm-calendar" element={<FarmerCalendar />} />{" "}
           {/* Updated to use element prop */}
         </Routes>
+        <TranslationService />
         <Footer />
       </Router>
     </div>
