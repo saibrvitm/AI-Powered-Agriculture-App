@@ -9,6 +9,7 @@ import CropSelectorPage from "./pages/CropSelectorPage";
 import WaterAdvisor from "./components/WaterAdvisor";
 import AboutUs from "./components/AboutUs";
 import AboutUsPage from "./pages/AboutUsPage";
+import FarmerCalendar from "./components/FarmerCalendar";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           {/* Updated to use element prop */}
           <Route path="/water-advisor" element={<WaterAdvisor />} />{" "}
           <Route path="/about" element={<AboutUsPage />} />{" "}
+          <Route path="/farm-calendar" element={<FarmerCalendar />} />{" "}
           {/* Updated to use element prop */}
         </Routes>
         <Footer />
