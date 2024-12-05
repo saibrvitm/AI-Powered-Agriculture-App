@@ -47,6 +47,31 @@ const WaterAdvisor = () => {
     }
   };
 
+  // Handle adding the crop cycle to calendar
+  const addCropToCalendar = () => {
+    const currentDate = new Date();
+    const endDate = new Date(currentDate);
+    endDate.setDate(endDate.getDate() + parseInt(formData.Crop_Cycle_Duration));
+
+    // Create the event
+    const newEvent = {
+      title: `${formData.Crop_Name} Cycle`,
+      start: currentDate,
+      end: endDate,
+    };
+
+    // Get existing events from localStorage or initialize with an empty array
+    const storedEvents = JSON.parse(localStorage.getItem("events")) || [];
+
+    // Add the new event to the stored events
+    storedEvents.push(newEvent);
+
+    // Save updated events back to localStorage
+    localStorage.setItem("events", JSON.stringify(storedEvents));
+
+    alert("Crop cycle added to the calendar!");
+  };
+
   return (
     <div className="water-advisor">
       <h2>Water Advisor</h2>
@@ -139,6 +164,13 @@ const WaterAdvisor = () => {
           {loading ? "Calculating..." : "Submit"}
         </button>
       </form>
+
+      {/* Button to Add Crop Cycle to Calendar */}
+      {predictions && (
+        <div className="add-to-calendar">
+          <button onClick={addCropToCalendar}>Add Crop Cycle to Calendar</button>
+        </div>
+      )}
 
       {/* Display Predictions */}
       {predictions && (
