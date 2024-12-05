@@ -79,6 +79,10 @@ Once the backend and frontend servers are running:
 - **AI/ML:** TensorFlow, OpenCV, Scikit-learn
 - **Other Libraries:** Axios (for API requests)
 
+## Sources
+
+Dataset sources can be found under `backend/crop-selector/dev/docs.md`
+
 ---
 
 ## Contributing 🤝
